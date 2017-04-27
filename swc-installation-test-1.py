@@ -39,7 +39,7 @@ __version__ = '0.1'
 
 
 def check():
-    if _sys.version_info < (2, 6):
+    if _sys.version_info < (3, 5):
         print('check for Python version (python):')
         print('outdated version of Python: ' + _sys.version)
         return False
