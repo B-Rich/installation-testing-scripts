@@ -87,6 +87,9 @@ __version__ = '0.1'
 
 # Comment out any entries you don't need
 CHECKS = [
+# Document processing
+    'pdflatex',
+    'bibtex',
 # Shell
     'virtual-shell',
 # Editors
@@ -100,14 +103,14 @@ CHECKS = [
     #'EasyMercurial',
 # Build tools and packaging
     'make',
-    'virtual-pypi-installer',
-    'setuptools',
+    #'virtual-pypi-installer',
+    #'setuptools',
     #'xcode',
 # Testing
-    'nosetests',       # Command line tool
-    'nose',            # Python package
-    'py.test',         # Command line tool
-    'pytest',          # Python package
+    #'nosetests',       # Command line tool
+    #'nose',            # Python package
+    #'py.test',         # Command line tool
+    #'pytest',          # Python package
 # SQL
     #'sqlite3',         # Command line tool
     #'sqlite3-python',  # Python package
@@ -115,13 +118,17 @@ CHECKS = [
     'python',
     'ipython',         # Command line tool
     'IPython',         # Python package
-    'argparse',        # Useful for utility scripts
+    'jupyter',
+    #'argparse',        # Useful for utility scripts
     'numpy',
     'scipy',
+    'mpi4py',
     'matplotlib',
+    'seaborn',
     'pandas',
-    #'sympy',
-    #'Cython',
+    'sympy',
+    'Cython',
+    'qutip',
     #'networkx',
     #'mayavi.mlab',
     ]
@@ -145,6 +152,11 @@ class InvalidCheck (KeyError):
 class DependencyError (Exception):
     _default_url = 'http://software-carpentry.org/setup/'
     _setup_urls = {  # (system, version, package) glob pairs
+        ('Linux', '*', 'LaTeX'): 'http://www.tug.org/texlive/',
+        ('Darwin', '*', 'LaTeX'): 'http://www.tug.org/mactex/',
+        ('Windows', '*', 'LaTeX'): 'https://miktex.org/',
+        ('*', '*', 'mpi4py'): 'http://mpi4py.readthedocs.io/en/stable/install.html',
+        ('*', '*', 'qutip'): 'http://qutip.org/docs/4.1/installation.html',
         ('*', '*', 'Cython'): 'http://docs.cython.org/src/quickstart/install.html',
         ('Linux', '*', 'EasyMercurial'): 'http://easyhg.org/download.html#download-linux',
         ('Darwin', '*', 'EasyMercurial'): 'http://easyhg.org/download.html#download-mac',
@@ -165,11 +177,13 @@ class DependencyError (Exception):
         ('*', '*', 'google-chrome'): 'https://www.google.com/intl/en/chrome/browser/',
         ('*', '*', 'hg'): 'http://mercurial.selenic.com/',
         ('*', '*', 'mercurial'): 'http://mercurial.selenic.com/',
+        ('*', '*', 'jupyter'): 'http://jupyter.org/install.html',
         ('*', '*', 'IPython'): 'http://ipython.org/install.html',
         ('*', '*', 'ipython'): 'http://ipython.org/install.html',
         ('*', '*', 'jinja'): 'http://jinja.pocoo.org/docs/intro/#installation',
         ('*', '*', 'kate'): 'http://kate-editor.org/get-it/',
         ('*', '*', 'make'): 'http://www.gnu.org/software/make/',
+        ('*', '*', 'seaborn'): 'http://seaborn.pydata.org/installing.html',
         ('Darwin', '*', 'matplotlib'): 'http://matplotlib.org/users/installing.html#building-on-osx',
         ('Windows', '*', 'matplotlib'): 'http://matplotlib.org/users/installing.html#installing-on-windows',
         ('*', '*', 'matplotlib'): 'http://matplotlib.org/users/installing.html#installing',
@@ -759,6 +773,8 @@ CHECKER['python'] = PythonDependency()
 
 
 for command,long_name,minimum_version,paths in [
+        ('pdflatex', 'LaTeX', None, None),
+        ('bibtex', 'BibTeX', None, None),
         ('sh', 'Bourne Shell', None, None),
         ('ash', 'Almquist Shell', None, None),
         ('bash', 'Bourne Again Shell', None, None),
@@ -773,6 +789,7 @@ for command,long_name,minimum_version,paths in [
         ('pip', None, None, None),
         ('sqlite3', 'SQLite 3', None, None),
         ('nosetests', 'Nose', (1, 0, 0), None),
+        ('jupyter', 'Jupyter', (4, 0), None),
         ('ipython', 'IPython script', (1, 0), None),
         ('emacs', 'Emacs', None, None),
         ('xemacs', 'XEmacs', None, None),
@@ -839,6 +856,9 @@ del paths, name, long_name  # cleanup namespace
 
 
 for package,name,long_name,minimum_version,and_dependencies in [
+        ('seaborn', None, None, (0, 7), None),
+        ('mpi4py', None, None, (2, 0), None),
+        ('qutip', None, None, (4, 0), None),
         ('nose', None, 'Nose Python package',
          CHECKER['nosetests'].minimum_version, None),
         ('pytest', None, 'pytest Python package',
